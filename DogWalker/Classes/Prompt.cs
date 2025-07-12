@@ -1,34 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace DogWalker.UI.Classes
 {
     public static class Prompt
     {
-        public static string ShowDialog(string text, string caption, string defaultValue = "")
+        public static Dictionary<string, string> ShowMultiFieldDialog(Dictionary<string, string> fields, string title)
         {
+            var result = new Dictionary<string, string>();
+
             Form prompt = new Form()
             {
-                Width = 300,
-                Height = 150,
-                Text = caption,
-                StartPosition = FormStartPosition.CenterParent
+                Width = 400,
+                Height = 70 + (fields.Count * 40),
+                Text = title,
+                StartPosition = FormStartPosition.CenterParent,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                MaximizeBox = false,
+                MinimizeBox = false
             };
 
-            Label textLabel = new Label() { Left = 10, Top = 10, Text = text, AutoSize = true };
-            TextBox inputBox = new TextBox() { Left = 10, Top = 40, Width = 250, Text = defaultValue };
-            Button confirmation = new Button() { Text = "Aceptar", Left = 180, Width = 80, Top = 70, DialogResult = DialogResult.OK };
+            int top = 20;
+            var textBoxes = new Dictionary<string, TextBox>();
 
-            prompt.Controls.Add(textLabel);
-            prompt.Controls.Add(inputBox);
-            prompt.Controls.Add(confirmation);
-            prompt.AcceptButton = confirmation;
+            foreach (var field in fields)
+            {
+                var label = new Label() { Left = 10, Top = top, Text = field.Key, Width = 120 };
+                var textBox = new TextBox() { Left = 140, Top = top - 3, Width = 220, Text = field.Value ?? "" };
 
-            return prompt.ShowDialog() == DialogResult.OK ? inputBox.Text : null;
+                prompt.Controls.Add(label);
+                prompt.Controls.Add(textBox);
+
+                textBoxes[field.Key] = textBox;
+                top += 35;
+            }
+
+            var btnOk = new Button()
+            {
+                Text = "OK",
+                Left = 280,
+                Width = 80,
+                Top = top,
+                DialogResult = DialogResult.OK
+            };
+
+            prompt.Controls.Add(btnOk);
+            prompt.AcceptButton = btnOk;
+
+            if (prompt.ShowDialog() == DialogResult.OK)
+            {
+                foreach (var kvp in textBoxes)
+                {
+                    result[kvp.Key] = kvp.Value.Text.Trim();
+                }
+                return result;
+            }
+
+            return null; // cancelled
         }
     }
 }

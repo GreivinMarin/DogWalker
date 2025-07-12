@@ -63,7 +63,7 @@ namespace DogWalker.UI
                     HeaderText = "",
                     Text = "Delete",
                     UseColumnTextForButtonValue = true,
-                    Width = 40,
+                    Width = 30,
                     FillWeight = 30
                 };
                 dgvBreeds.Columns.Add(btnDelete);
@@ -103,11 +103,17 @@ namespace DogWalker.UI
             string columnName = dgvBreeds.Columns[e.ColumnIndex].Name;
 
             if (columnName == "btnEdit")
-            {
-                string nuevoNombre = Prompt.ShowDialog("Edit name:", "Edit Breed", selectedBreed.Name);
-                if (!string.IsNullOrWhiteSpace(nuevoNombre))
+            {                
+                var fieldValues = new Dictionary<string, string>
                 {
-                    selectedBreed.Name = nuevoNombre;
+                    { "Name", selectedBreed.Name },
+
+                };
+                var updatedValues = Prompt.ShowMultiFieldDialog(fieldValues, "Edit Breed");
+
+                if (updatedValues != null)
+                {
+                    selectedBreed.Name = updatedValues["Name"];
                     bool updated = await _repo.UpdateAsync(selectedBreed);
                     if (updated)
                         LoadBreeds();

@@ -47,7 +47,8 @@ namespace DogWalker.UI
             this.catalogsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1811, 38);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1087, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -56,13 +57,13 @@ namespace DogWalker.UI
             this.mnuProcesses.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuWalks});
             this.mnuProcesses.Name = "mnuProcesses";
-            this.mnuProcesses.Size = new System.Drawing.Size(86, 34);
+            this.mnuProcesses.Size = new System.Drawing.Size(70, 20);
             this.mnuProcesses.Text = "Processes";
             // 
             // mnuWalks
             // 
             this.mnuWalks.Name = "mnuWalks";
-            this.mnuWalks.Size = new System.Drawing.Size(224, 26);
+            this.mnuWalks.Size = new System.Drawing.Size(105, 22);
             this.mnuWalks.Text = "Walks";
             // 
             // catalogsToolStripMenuItem
@@ -72,36 +73,36 @@ namespace DogWalker.UI
             this.mnuDogs,
             this.mnuBreeds});
             this.catalogsToolStripMenuItem.Name = "catalogsToolStripMenuItem";
-            this.catalogsToolStripMenuItem.Size = new System.Drawing.Size(81, 34);
+            this.catalogsToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.catalogsToolStripMenuItem.Text = "Catalogs";
             // 
             // mnuClients
             // 
             this.mnuClients.Name = "mnuClients";
-            this.mnuClients.Size = new System.Drawing.Size(224, 26);
+            this.mnuClients.Size = new System.Drawing.Size(180, 22);
             this.mnuClients.Text = "Clients";
+            this.mnuClients.Click += new System.EventHandler(this.mnuClients_Click);
             // 
             // mnuDogs
             // 
             this.mnuDogs.Name = "mnuDogs";
-            this.mnuDogs.Size = new System.Drawing.Size(224, 26);
+            this.mnuDogs.Size = new System.Drawing.Size(180, 22);
             this.mnuDogs.Text = "Dogs";
             // 
             // mnuBreeds
             // 
             this.mnuBreeds.Name = "mnuBreeds";
-            this.mnuBreeds.Size = new System.Drawing.Size(224, 26);
+            this.mnuBreeds.Size = new System.Drawing.Size(180, 22);
             this.mnuBreeds.Text = "Breeds";
             this.mnuBreeds.Click += new System.EventHandler(this.mnuBreeds_Click);
             // 
             // FrmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1449, 663);
+            this.ClientSize = new System.Drawing.Size(1087, 539);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FrmMain";
             this.Text = "DogWalker";
             this.menuStrip1.ResumeLayout(false);

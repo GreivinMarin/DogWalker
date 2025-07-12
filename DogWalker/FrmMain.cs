@@ -27,8 +27,19 @@ namespace DogWalker.UI
         private void mnuBreeds_Click(object sender, EventArgs e)
         {
             var dbContext = new DatabaseContext(_connectionString);
-            var breedRepo = new BreedRepository(dbContext);
-            var form = new BreedForm(breedRepo)
+            var repo = new BreedRepository(dbContext);
+            var form = new BreedForm(repo)
+            {
+                MdiParent = this
+            };
+            form.Show();
+        }
+
+        private void mnuClients_Click(object sender, EventArgs e)
+        {
+            var dbContext = new DatabaseContext(_connectionString);
+            var repo = new ClientRepository(dbContext);
+            var form = new ClientForm(repo)
             {
                 MdiParent = this
             };
