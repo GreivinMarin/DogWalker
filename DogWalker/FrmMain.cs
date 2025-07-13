@@ -1,5 +1,6 @@
 ﻿using DogWalker.Infrastructure.Data;
 using DogWalker.Infrastructure.Repositories;
+using DogWalker.UI.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,6 +41,18 @@ namespace DogWalker.UI
             var dbContext = new DatabaseContext(_connectionString);
             var repo = new ClientRepository(dbContext);
             var form = new ClientForm(repo)
+            {
+                MdiParent = this
+            };
+            form.Show();
+        }
+
+        private void mnuDogs_Click(object sender, EventArgs e)
+        {
+            var dbContext = new DatabaseContext(_connectionString);
+            var repoDog = new DogRepository(dbContext);
+            var repoBreed = new BreedRepository(dbContext);
+            var form = new DogForm(repoDog, repoBreed)
             {
                 MdiParent = this
             };

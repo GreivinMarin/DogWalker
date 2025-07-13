@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DogWalker.UI
+namespace DogWalker.UI.Forms
 {
     public partial class ClientForm : Form
     {

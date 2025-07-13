@@ -1,5 +1,5 @@
 ﻿
-namespace DogWalker.UI
+namespace DogWalker.UI.Forms
 {
     partial class ClientForm
     {
@@ -58,6 +58,8 @@ namespace DogWalker.UI
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.btnAddClient);
             this.groupBox1.Controls.Add(this.label4);

@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using DogWalker.UI.Classes;
 
-namespace DogWalker.UI
+namespace DogWalker.UI.Forms
 {
     public partial class BreedForm : Form
     {

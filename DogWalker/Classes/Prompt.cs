@@ -1,64 +1,104 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace DogWalker.UI.Classes
 {
     public static class Prompt
     {
-        public static Dictionary<string, string> ShowMultiFieldDialog(Dictionary<string, string> fields, string title)
+        public static Dictionary<string, string> ShowMultiFieldDialog(
+            Dictionary<string, string> fields,
+            string title,
+            Dictionary<string, List<string>> comboOptions = null)
         {
-            var result = new Dictionary<string, string>();
-
-            Form prompt = new Form()
+            var form = new Form()
             {
-                Width = 400,
-                Height = 70 + (fields.Count * 40),
-                Text = title,
-                StartPosition = FormStartPosition.CenterParent,
+                Width = 420,
+                Height = fields.Count * 40 + 100,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
-                MaximizeBox = false,
-                MinimizeBox = false
+                Text = title,
+                StartPosition = FormStartPosition.CenterParent
             };
 
-            int top = 20;
-            var textBoxes = new Dictionary<string, TextBox>();
+            var controls = new Dictionary<string, Control>();
 
+            int top = 20;
             foreach (var field in fields)
             {
-                var label = new Label() { Left = 10, Top = top, Text = field.Key, Width = 120 };
-                var textBox = new TextBox() { Left = 140, Top = top - 3, Width = 220, Text = field.Value ?? "" };
+                var label = new Label() { Left = 20, Top = top + 3, Text = field.Key, Width = 120 };
+                Control input;
 
-                prompt.Controls.Add(label);
-                prompt.Controls.Add(textBox);
+                if (comboOptions != null && comboOptions.ContainsKey(field.Key))
+                {
+                    var combo = new ComboBox()
+                    {
+                        Left = 150,
+                        Top = top,
+                        Width = 200,
+                        DropDownStyle = ComboBoxStyle.DropDownList
+                    };
+                    combo.Items.AddRange(comboOptions[field.Key].ToArray());
+                    combo.SelectedItem = field.Value;
+                    input = combo;
+                }
+                else if (field.Key.ToLower().Contains("date"))
+                {
+                    var dtp = new DateTimePicker()
+                    {
+                        Left = 150,
+                        Top = top,
+                        Width = 200,
+                        Format = DateTimePickerFormat.Custom,
+                        CustomFormat = "yyyy-MM-dd"
+                    };
 
-                textBoxes[field.Key] = textBox;
+                    if (DateTime.TryParse(field.Value, out var dt))
+                        dtp.Value = dt;
+
+                    input = dtp;
+                }
+                else
+                {
+                    input = new TextBox()
+                    {
+                        Left = 150,
+                        Top = top,
+                        Width = 200,
+                        Text = field.Value
+                    };
+                }
+
+                form.Controls.Add(label);
+                form.Controls.Add(input);
+                controls[field.Key] = input;
                 top += 35;
             }
 
-            var btnOk = new Button()
-            {
-                Text = "OK",
-                Left = 280,
-                Width = 80,
-                Top = top,
-                DialogResult = DialogResult.OK
-            };
+            var buttonOk = new Button() { Text = "OK", Left = 150, Width = 100, Top = top + 10, DialogResult = DialogResult.OK };
+            var buttonCancel = new Button() { Text = "Cancel", Left = 260, Width = 100, Top = top + 10, DialogResult = DialogResult.Cancel };
 
-            prompt.Controls.Add(btnOk);
-            prompt.AcceptButton = btnOk;
+            form.Controls.Add(buttonOk);
+            form.Controls.Add(buttonCancel);
+            form.AcceptButton = buttonOk;
+            form.CancelButton = buttonCancel;
 
-            if (prompt.ShowDialog() == DialogResult.OK)
+            if (form.ShowDialog() != DialogResult.OK)
+                return null;
+
+            var result = new Dictionary<string, string>();
+            foreach (var kvp in controls)
             {
-                foreach (var kvp in textBoxes)
-                {
-                    result[kvp.Key] = kvp.Value.Text.Trim();
-                }
-                return result;
+                if (kvp.Value is TextBox txt)
+                    result[kvp.Key] = txt.Text.Trim();
+                else if (kvp.Value is DateTimePicker dtp)
+                    result[kvp.Key] = dtp.Value.ToString("yyyy-MM-dd");
+                else if (kvp.Value is ComboBox cmb)
+                    result[kvp.Key] = cmb.SelectedItem?.ToString();
             }
 
-            return null; // cancelled
+            return result;
         }
     }
 }

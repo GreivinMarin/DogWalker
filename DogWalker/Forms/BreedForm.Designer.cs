@@ -1,5 +1,5 @@
 ﻿
-namespace DogWalker.UI
+namespace DogWalker.UI.Forms
 {
     partial class BreedForm
     {
@@ -44,7 +44,7 @@ namespace DogWalker.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvBreeds.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvBreeds.Location = new System.Drawing.Point(9, 85);
-            this.dgvBreeds.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvBreeds.Margin = new System.Windows.Forms.Padding(2);
             this.dgvBreeds.Name = "dgvBreeds";
             this.dgvBreeds.RowHeadersVisible = false;
             this.dgvBreeds.RowHeadersWidth = 51;
@@ -55,6 +55,8 @@ namespace DogWalker.UI
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.btnAddBreed);
             this.groupBox1.Controls.Add(this.txtBreedName);
             this.groupBox1.Location = new System.Drawing.Point(9, 15);
@@ -73,6 +75,7 @@ namespace DogWalker.UI
             this.btnAddBreed.TabIndex = 4;
             this.btnAddBreed.Text = "Add";
             this.btnAddBreed.UseVisualStyleBackColor = true;
+            this.btnAddBreed.Click += new System.EventHandler(this.btnAddBreed_Click);
             // 
             // txtBreedName
             // 
@@ -81,7 +84,6 @@ namespace DogWalker.UI
             this.txtBreedName.Name = "txtBreedName";
             this.txtBreedName.Size = new System.Drawing.Size(150, 20);
             this.txtBreedName.TabIndex = 3;
-            this.txtBreedName.Click += new System.EventHandler(this.btnAddBreed_Click);
             // 
             // BreedForm
             // 
@@ -90,7 +92,7 @@ namespace DogWalker.UI
             this.ClientSize = new System.Drawing.Size(600, 320);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.dgvBreeds);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "BreedForm";
             this.Text = "BreedForm";
             ((System.ComponentModel.ISupportInitialize)(this.dgvBreeds)).EndInit();

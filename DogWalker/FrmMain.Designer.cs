@@ -88,6 +88,7 @@ namespace DogWalker.UI
             this.mnuDogs.Name = "mnuDogs";
             this.mnuDogs.Size = new System.Drawing.Size(180, 22);
             this.mnuDogs.Text = "Dogs";
+            this.mnuDogs.Click += new System.EventHandler(this.mnuDogs_Click);
             // 
             // mnuBreeds
             // 
