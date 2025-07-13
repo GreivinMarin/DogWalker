@@ -63,10 +63,12 @@
     <Compile Include="Entities\Breed.cs" />
     <Compile Include="Entities\Client.cs" />
     <Compile Include="Entities\Dog.cs" />
+    <Compile Include="Entities\Walk.cs" />
     <Compile Include="Interfaces\IBreedRepository.cs" />
     <Compile Include="Interfaces\IClientRepository.cs" />
     <Compile Include="Interfaces\IDatabaseContext.cs" />
     <Compile Include="Interfaces\IDogRepository.cs" />
+    <Compile Include="Interfaces\IWalkRepository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

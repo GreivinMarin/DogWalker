@@ -64,6 +64,7 @@
     <Compile Include="Repositories\ClientRepository.cs" />
     <Compile Include="Repositories\DogRepository.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
+    <Compile Include="Repositories\WalkRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

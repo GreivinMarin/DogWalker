@@ -1,7 +1,7 @@
 ﻿
 namespace DogWalker.UI
 {
-    partial class FrmMain
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -63,8 +63,9 @@ namespace DogWalker.UI
             // mnuWalks
             // 
             this.mnuWalks.Name = "mnuWalks";
-            this.mnuWalks.Size = new System.Drawing.Size(105, 22);
+            this.mnuWalks.Size = new System.Drawing.Size(180, 22);
             this.mnuWalks.Text = "Walks";
+            this.mnuWalks.Click += new System.EventHandler(this.mnuWalks_Click);
             // 
             // catalogsToolStripMenuItem
             // 
@@ -79,32 +80,32 @@ namespace DogWalker.UI
             // mnuClients
             // 
             this.mnuClients.Name = "mnuClients";
-            this.mnuClients.Size = new System.Drawing.Size(180, 22);
+            this.mnuClients.Size = new System.Drawing.Size(110, 22);
             this.mnuClients.Text = "Clients";
             this.mnuClients.Click += new System.EventHandler(this.mnuClients_Click);
             // 
             // mnuDogs
             // 
             this.mnuDogs.Name = "mnuDogs";
-            this.mnuDogs.Size = new System.Drawing.Size(180, 22);
+            this.mnuDogs.Size = new System.Drawing.Size(110, 22);
             this.mnuDogs.Text = "Dogs";
             this.mnuDogs.Click += new System.EventHandler(this.mnuDogs_Click);
             // 
             // mnuBreeds
             // 
             this.mnuBreeds.Name = "mnuBreeds";
-            this.mnuBreeds.Size = new System.Drawing.Size(180, 22);
+            this.mnuBreeds.Size = new System.Drawing.Size(110, 22);
             this.mnuBreeds.Text = "Breeds";
             this.mnuBreeds.Click += new System.EventHandler(this.mnuBreeds_Click);
             // 
-            // FrmMain
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1087, 539);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "FrmMain";
+            this.Name = "MainForm";
             this.Text = "DogWalker";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

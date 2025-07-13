@@ -14,11 +14,11 @@ using System.Windows.Forms;
 
 namespace DogWalker.UI
 {
-    public partial class FrmMain : Form
+    public partial class MainForm : Form
     {
         private readonly string _connectionString;
 
-        public FrmMain()
+        public MainForm()
         {
             InitializeComponent();
             IsMdiContainer = true;
@@ -56,6 +56,16 @@ namespace DogWalker.UI
             {
                 MdiParent = this
             };
+            form.Show();
+        }
+
+        private void mnuWalks_Click(object sender, EventArgs e)
+        {
+            var dbContext = new DatabaseContext(_connectionString);
+            var repoDog = new DogRepository(dbContext);
+            var repoClient = new ClientRepository(dbContext);
+            var repoWalk = new WalkRepository(dbContext);
+            var form = new WalkForm(repoClient, repoDog, repoWalk);
             form.Show();
         }
     }
