@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DogWalker.Core.Interfaces;
 using DogWalker.Infrastructure.Data;
 using DogWalker.Core;
+using System.Reflection;
 
 namespace DogWalker.Infrastructure.Repositories
 {
@@ -30,6 +31,22 @@ namespace DogWalker.Infrastructure.Repositories
             return await _context.Connection.QueryFirstOrDefaultAsync<T>(sql, parameters);
         }
 
+        public virtual async Task<IEnumerable<T>> SearchAsync(object searchCriteria)
+        {
+            var parameters = new DynamicParameters();
+            foreach (PropertyInfo prop in searchCriteria.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                string name = prop.Name;
+                object value = prop.GetValue(searchCriteria);
+
+                // Si el valor es null, no se agrega (opcional)
+                if (value != null)
+                    parameters.Add("@" + name, value);
+            }
+            string sql = SearchAsyncQuery(searchCriteria);
+            return await _context.Connection.QueryAsync<T>(sql, parameters);
+        }
+
         public virtual async Task<int> AddAsync(T entity)
         {
             string sql = GetInsertQuery();
@@ -49,13 +66,14 @@ namespace DogWalker.Infrastructure.Repositories
             var parameters = new { Id = id };
             int rowsAffected = await _context.Connection.ExecuteAsync(sql, parameters);
             return rowsAffected > 0;
-        }
+        } 
 
         // Métodos abstractos para que las clases hijas implementen sus queries SQL
         protected abstract string GetSelectAllQuery();
         protected abstract string GetSelectByIdQuery();
+        protected abstract string SearchAsyncQuery(object searchCriteria);
         protected abstract string GetInsertQuery();
         protected abstract string GetUpdateQuery();
-        protected abstract string GetDeleteQuery();
+        protected abstract string GetDeleteQuery();        
     }
 }

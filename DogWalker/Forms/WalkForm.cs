@@ -1,4 +1,5 @@
-﻿using DogWalker.Core.Entities;
+﻿using DogWalker.Core.Classes;
+using DogWalker.Core.Entities;
 using DogWalker.Core.Interfaces;
 using DogWalker.UI.Classes;
 using System;
@@ -29,6 +30,8 @@ namespace DogWalker.UI.Forms
             ConfigureGrid();
             await LoadClientsAsync();
             await LoadDogsAsync();
+            ClearAddTabFields();
+            ClearFiltersSearchFields();
             await LoadWalksAsync();            
         }
 
@@ -82,7 +85,16 @@ namespace DogWalker.UI.Forms
         private async Task LoadWalksAsync()
         {
             dgvWalks.Columns.Clear();
-            var walks = (await _walkRepository.GetAllAsync()).ToList();
+
+            var criteria = new WalkSearchCriteria
+            {
+                ClientName = txtClientName.Text.Trim(),
+                DogName = txtDogName.Text.Trim(),
+                FromDate = dtpFromDate.Value.Date,
+                ToDate = dtpToDate.Value.Date
+            };
+
+            var walks = (await _walkRepository.SearchAsync(criteria)).ToList();
             dgvWalks.DataSource = walks;
 
             dgvWalks.Columns["Id"].Visible = false;
@@ -142,12 +154,20 @@ namespace DogWalker.UI.Forms
             }
         }
 
-        private void ClearFields()
+        private void ClearAddTabFields()
         {
             txtDuration.Value = 1;
             dtpDate.Value = DateTime.Today;
             cmbClient.SelectedIndex = 0;
             cmbDog.SelectedIndex = 0;
+        }
+
+        private void ClearFiltersSearchFields()
+        {
+            txtClientName.Text = "";
+            txtDogName.Text = "";
+            dtpFromDate.Value = DateTime.Today;
+            dtpToDate.Value = DateTime.Today;
         }
 
         private async void btnAdd_Click(object sender, EventArgs e)
@@ -200,7 +220,7 @@ namespace DogWalker.UI.Forms
 
             await _walkRepository.AddAsync(walk);
             await LoadWalksAsync();
-            ClearFields();
+            ClearAddTabFields();
         }
 
         private async void DgvWalks_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -246,7 +266,7 @@ namespace DogWalker.UI.Forms
 
                 await _walkRepository.UpdateAsync(row);
                 await LoadWalksAsync();
-                ClearFields();
+                ClearAddTabFields();
             }
             else if (column == "btnDelete")
             {
@@ -261,7 +281,17 @@ namespace DogWalker.UI.Forms
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            ClearFields();
+            ClearAddTabFields();
+        }
+
+        private async void btnSearch_Click(object sender, EventArgs e)
+        {
+            await LoadWalksAsync();
+        }
+
+        private void cmdClearFilters_Click(object sender, EventArgs e)
+        {
+            ClearFiltersSearchFields();
         }
     }
 }

@@ -53,5 +53,10 @@ namespace DogWalker.Infrastructure.Repositories
         {
             return @"DELETE FROM client WHERE id = @Id";
         }
+
+        protected override string SearchAsyncQuery(object searchCriteria)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

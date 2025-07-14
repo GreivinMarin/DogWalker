@@ -13,5 +13,6 @@ namespace DogWalker.Core
         Task<int> AddAsync(T entity);
         Task<bool> UpdateAsync(T entity);
         Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<T>> SearchAsync(object searchCriteria);
     }
 }

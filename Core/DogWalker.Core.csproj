@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\WalkSearchCriteria.cs" />
     <Compile Include="Entities\Breed.cs" />
     <Compile Include="Entities\Client.cs" />
     <Compile Include="Entities\Dog.cs" />
