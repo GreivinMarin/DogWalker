@@ -69,7 +69,7 @@ namespace DogWalker.UI.Forms
 
         private void AddActionButtons()
         {
-            // Evitar columnas duplicadas
+            // prevent duplicated columns
             if (dgvDogs.Columns["btnEdit"] != null)
                 dgvDogs.Columns.Remove("btnEdit");
 

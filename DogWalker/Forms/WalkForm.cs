@@ -1,10 +1,9 @@
 ﻿using DogWalker.Core.Entities;
 using DogWalker.Core.Interfaces;
-using DogWalker.Infrastructure.Data;
-using DogWalker.Infrastructure.Repositories;
 using DogWalker.UI.Classes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,141 +12,256 @@ namespace DogWalker.UI.Forms
 {
     public partial class WalkForm : Form
     {
-        private readonly IWalkRepository _walkRepository;
         private readonly IClientRepository _clientRepository;
         private readonly IDogRepository _dogRepository;
+        private readonly IWalkRepository _walkRepository;
 
-        private Dictionary<string, int> _clientNameToId;
-        private Dictionary<string, int> _dogNameToId;
-
-        public WalkForm(
-            IClientRepository clientRepository,
-            IDogRepository dogRepository,
-            IWalkRepository walkRepository)
+        public WalkForm(IClientRepository clientRepo, IDogRepository dogRepo, IWalkRepository walkRepo)
         {
             InitializeComponent();
-
-            _clientRepository = clientRepository;
-            _dogRepository = dogRepository;
-            _walkRepository = walkRepository;
-
-            dgvWalks.AutoGenerateColumns = false;
-            dgvWalks.AllowUserToAddRows = false;
-            dgvWalks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            _clientRepository = clientRepo;
+            _dogRepository = dogRepo;
+            _walkRepository = walkRepo;
         }
 
         private async void WalkForm_Load(object sender, EventArgs e)
         {
-            await LoadDataAsync();
+            ConfigureGrid();
+            await LoadClientsAsync();
+            await LoadDogsAsync();
+            await LoadWalksAsync();            
         }
 
-        private async Task LoadDataAsync()
+        private void ConfigureGrid()
+        {
+            dgvWalks.AutoGenerateColumns = true;
+            dgvWalks.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvWalks.RowHeadersVisible = false;
+            dgvWalks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvWalks.MultiSelect = false;
+            dgvWalks.ReadOnly = true;
+            dgvWalks.AllowUserToAddRows = false;
+            dgvWalks.AllowUserToDeleteRows = false;
+            dgvWalks.AllowUserToResizeRows = false;
+            dgvWalks.BackgroundColor = Color.White;
+            dgvWalks.BorderStyle = BorderStyle.None;            
+        }
+
+        private async Task LoadClientsAsync()
+        {
+            var clients = (await _clientRepository.GetAllAsync()).ToList();
+            
+            clients.Insert(0, new Client
+            {
+                Id = 0,
+                Name = "Please select a client"
+            });
+
+            cmbClient.DataSource = clients.ToList();
+            cmbClient.DisplayMember = "FullName";
+            cmbClient.ValueMember = "Id";
+            cmbClient.SelectedIndex = 0;
+        }
+
+        private async Task LoadDogsAsync()
+        {
+            var dogs = (await _dogRepository.GetAllAsync()).ToList();
+
+            dogs.Insert(0, new Dog
+            {
+                Id = 0,
+                Name = "Please select a dog"
+            });
+
+            cmbDog.DataSource = dogs.ToList();
+            cmbDog.DisplayMember = "Name";
+            cmbDog.ValueMember = "Id";
+            cmbDog.SelectedIndex = 0;
+        }
+
+        private async Task LoadWalksAsync()
         {
             dgvWalks.Columns.Clear();
-            dgvWalks.DataSource = (await _walkRepository.GetAllAsync()).ToList();
+            var walks = (await _walkRepository.GetAllAsync()).ToList();
+            dgvWalks.DataSource = walks;
 
-            dgvWalks.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "ID", DataPropertyName = "Id" });
-            dgvWalks.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Client", DataPropertyName = "ClientName" });
-            dgvWalks.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Dog", DataPropertyName = "DogName" });
-            dgvWalks.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Date", DataPropertyName = "Date" });
-            dgvWalks.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Duration", DataPropertyName = "Duration" });
+            dgvWalks.Columns["Id"].Visible = false;
+            dgvWalks.Columns["IdClient"].Visible = false;
+            dgvWalks.Columns["IdDog"].Visible = false;
 
-            dgvWalks.Columns.Add(new DataGridViewButtonColumn { Text = "Edit", UseColumnTextForButtonValue = true, Width = 60 });
-            dgvWalks.Columns.Add(new DataGridViewButtonColumn { Text = "Delete", UseColumnTextForButtonValue = true, Width = 60 });
+            dgvWalks.Columns["ClientName"].HeaderText = "Client";
+            dgvWalks.Columns["DogName"].HeaderText = "Dog";
+            dgvWalks.Columns["Date"].HeaderText = "Date";
+            dgvWalks.Columns["Duration"].HeaderText = "Duration (min)";
 
-            dgvWalks.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvWalks.Columns["ClientName"].DisplayIndex = 0;
+            dgvWalks.Columns["DogName"].DisplayIndex = 1;
+            dgvWalks.Columns["Date"].DisplayIndex = 2;
+            dgvWalks.Columns["Duration"].DisplayIndex = 3;
+
+            AddActionButtons();
+        }
+
+        private void AddActionButtons()
+        {
+            // prevent duplicated columns
+            if (dgvWalks.Columns["btnEdit"] != null)
+                dgvWalks.Columns.Remove("btnEdit");
+
+            if (dgvWalks.Columns["btnDelete"] != null)
+                dgvWalks.Columns.Remove("btnDelete");
+
+            if (dgvWalks.Columns["btnEdit"] == null)
+            {
+                var btnEdit = new DataGridViewButtonColumn
+                {
+                    Name = "btnEdit",
+                    HeaderText = "",
+                    Text = "Edit",
+                    UseColumnTextForButtonValue = true,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                    Width = 60,
+                    FillWeight = 60
+                };
+                dgvWalks.Columns.Add(btnEdit);
+            }
+
+            if (dgvWalks.Columns["btnDelete"] == null)
+            {
+                var btnDelete = new DataGridViewButtonColumn
+                {
+                    Name = "btnDelete",
+                    HeaderText = "",
+                    Text = "Delete",
+                    UseColumnTextForButtonValue = true,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                    Width = 60,
+                    FillWeight = 60
+                };
+                dgvWalks.Columns.Add(btnDelete);
+            }
+        }
+
+        private void ClearFields()
+        {
+            txtDuration.Value = 1;
+            dtpDate.Value = DateTime.Today;
+            cmbClient.SelectedIndex = 0;
+            cmbDog.SelectedIndex = 0;
         }
 
         private async void btnAdd_Click(object sender, EventArgs e)
         {
-            var clients = (await _clientRepository.GetAllAsync()).ToList();
-            var dogs = (await _dogRepository.GetAllAsync()).ToList();
-
-            _clientNameToId = clients.ToDictionary(c => $"{c.Name} {c.LastName}", c => c.Id);
-            _dogNameToId = dogs.ToDictionary(d => d.Name, d => d.Id);
-
-            var fields = new Dictionary<string, string>
+            if (cmbClient.SelectedItem == null || cmbClient.SelectedValue == null || (int)cmbClient.SelectedValue == 0)
             {
-                { "Client", "" },
-                { "Dog", "" },
-                { "Date", DateTime.Today.ToString("yyyy-MM-dd") },
-                { "Duration", "30" }
-            };
-
-            var comboOptions = new Dictionary<string, List<string>>
-            {
-                { "Client", _clientNameToId.Keys.ToList() },
-                { "Dog", _dogNameToId.Keys.ToList() }
-            };
-
-            var result = Prompt.ShowMultiFieldDialog(fields, "Add Walk", comboOptions);
-
-            if (result != null)
-            {
-                var walk = new Walk
-                {
-                    IdClient = _clientNameToId[result["Client"]],
-                    IdDog = _dogNameToId[result["Dog"]],
-                    Date = result["Date"],
-                    Duration = double.Parse(result["Duration"])
-                };
-
-                await _walkRepository.AddAsync(walk);
-                await LoadDataAsync();
+                MessageBox.Show("Please select a valid client from the list.");
+                cmbClient.Focus();
+                return;
             }
+
+            if (cmbDog.SelectedItem == null || cmbDog.SelectedValue == null || (int)cmbDog.SelectedValue == 0)
+            {
+                MessageBox.Show("Please select a valid dog from the list.");
+                cmbDog.Focus();
+                return;
+            }
+
+            // Date Validation
+            DateTime selectedDate = dtpDate.Value.Date;
+            if (selectedDate == DateTime.MinValue)
+            {
+                MessageBox.Show("Please select a valid date.");
+                dtpDate.Focus();
+                return;
+            }
+
+            // Date can't be in the future? need to clarify requirement
+            if (selectedDate > DateTime.Today)
+            {
+                MessageBox.Show("The selected date cannot be in the future.");
+                dtpDate.Focus();
+                return;
+            }
+
+            if (txtDuration.Value <= 0)
+            {
+                MessageBox.Show("Please enter a duration greater than zero.");
+                txtDuration.Focus();
+                return;
+            }
+
+            var walk = new Walk
+            {
+                IdClient = (int)cmbClient.SelectedValue,
+                IdDog = (int)cmbDog.SelectedValue,
+                Date = dtpDate.Value.ToString("yyyy-MM-dd"),
+                Duration = (double)txtDuration.Value
+            };
+
+            await _walkRepository.AddAsync(walk);
+            await LoadWalksAsync();
+            ClearFields();
         }
 
-        private async void dgvWalks_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void DgvWalks_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
-            var walk = dgvWalks.Rows[e.RowIndex].DataBoundItem as Walk;
 
-            if (dgvWalks.Columns[e.ColumnIndex].HeaderText == "Edit")
+            var row = dgvWalks.Rows[e.RowIndex].DataBoundItem as Walk;
+            if (row == null) return;
+
+            var column = dgvWalks.Columns[e.ColumnIndex].Name;
+
+            if (column == "btnEdit")
             {
                 var clients = (await _clientRepository.GetAllAsync()).ToList();
                 var dogs = (await _dogRepository.GetAllAsync()).ToList();
 
-                _clientNameToId = clients.ToDictionary(c => $"{c.Name} {c.LastName}", c => c.Id);
-                _dogNameToId = dogs.ToDictionary(d => d.Name, d => d.Id);
-
-                string selectedClient = _clientNameToId.FirstOrDefault(x => x.Value == walk.IdClient).Key;
-                string selectedDog = _dogNameToId.FirstOrDefault(x => x.Value == walk.IdDog).Key;
-
-                var fields = new Dictionary<string, string>
+                var data = new Dictionary<string, string>
                 {
-                    { "Client", selectedClient },
-                    { "Dog", selectedDog },
-                    { "Date", walk.Date },
-                    { "Duration", walk.Duration.ToString() }
+                    ["Client"] = row.ClientName,
+                    ["Dog"] = row.DogName,
+                    ["Date"] = row.Date,
+                    ["Duration"] = row.Duration.ToString()
                 };
 
-                var comboOptions = new Dictionary<string, List<string>>
+                var combos = new Dictionary<string, List<string>>
                 {
-                    { "Client", _clientNameToId.Keys.ToList() },
-                    { "Dog", _dogNameToId.Keys.ToList() }
+                    ["Client"] = clients.Select(c => c.Name + " " + c.LastName).ToList(),
+                    ["Dog"] = dogs.Select(d => d.Name).ToList()
                 };
 
-                var result = Prompt.ShowMultiFieldDialog(fields, "Edit Walk", comboOptions);
+                var result = Prompt.ShowMultiFieldDialog(data, "Edit Walk", combos);
+                if (result == null) return;
 
-                if (result != null)
-                {
-                    walk.IdClient = _clientNameToId[result["Client"]];
-                    walk.IdDog = _dogNameToId[result["Dog"]];
-                    walk.Date = result["Date"];
-                    walk.Duration = double.Parse(result["Duration"]);
+                var selectedClient = clients.FirstOrDefault(c => (c.Name + " " + c.LastName) == result["Client"]);
+                var selectedDog = dogs.FirstOrDefault(d => d.Name == result["Dog"]);
 
-                    await _walkRepository.UpdateAsync(walk);
-                    await LoadDataAsync();
-                }
+                if (selectedClient == null || selectedDog == null) return;
+
+                row.IdClient = selectedClient.Id;
+                row.IdDog = selectedDog.Id;
+                row.Date = result["Date"];
+                row.Duration = double.Parse(result["Duration"]);
+
+                await _walkRepository.UpdateAsync(row);
+                await LoadWalksAsync();
+                ClearFields();
             }
-            else if (dgvWalks.Columns[e.ColumnIndex].HeaderText == "Delete")
+            else if (column == "btnDelete")
             {
-                if (MessageBox.Show("Are you sure to delete this walk?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                var confirm = MessageBox.Show("Are you sure you want to delete this walk?", "Confirm", MessageBoxButtons.YesNo);
+                if (confirm == DialogResult.Yes)
                 {
-                    await _walkRepository.DeleteAsync(walk.Id);
-                    await LoadDataAsync();
+                    await _walkRepository.DeleteAsync(row.Id);
+                    await LoadWalksAsync();
                 }
             }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            ClearFields();
         }
     }
 }

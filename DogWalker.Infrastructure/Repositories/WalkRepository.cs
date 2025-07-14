@@ -14,10 +14,10 @@ namespace DogWalker.Infrastructure.Repositories
                 w.id AS Id,
                 w.idClient AS IdClient,
                 w.idDog AS IdDog,
-                w.date AS Date,
-                w.duration AS Duration,
                 c.name || ' ' || c.lastname AS ClientName,
-                d.name AS DogName
+                d.name AS DogName,
+                w.date AS Date,
+                w.duration AS Duration                
              FROM walk w
              INNER JOIN client c ON c.id = w.idClient
              INNER JOIN dog d ON d.id = w.idDog";
