@@ -68,5 +68,14 @@ namespace DogWalker.UI
             var form = new WalkForm(repoClient, repoDog, repoWalk);
             form.Show();
         }
+
+        private void mnuExit_Click(object sender, EventArgs e)
+        {
+            var confirm = MessageBox.Show("Are you sure you want to close the application?", "Confirm", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+        }
     }
 }

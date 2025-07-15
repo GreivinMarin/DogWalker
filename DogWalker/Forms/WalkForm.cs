@@ -34,8 +34,7 @@ namespace DogWalker.UI.Forms
             await LoadClientsAsync();
             await LoadDogsAsync();
             ClearAddTabFields();
-            ClearFiltersSearchFields();
-            await LoadWalksAsync();            
+            ClearFiltersSearchFields();                        
         }
 
         private void ConfigureGrid()
@@ -166,13 +165,14 @@ namespace DogWalker.UI.Forms
             cmbDog.SelectedIndex = 0;
         }
 
-        private void ClearFiltersSearchFields()
+        private async void ClearFiltersSearchFields()
         {
             txtClientName.Text = "";
             txtDogName.Text = "";
             chkFilterByDate.Checked = true;
             dtpFromDate.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
             dtpToDate.Value = DateTime.Today;
+            await LoadWalksAsync();
         }
 
         private async Task SaveData() {
@@ -320,7 +320,7 @@ namespace DogWalker.UI.Forms
 
         private void cmdClearFilters_Click(object sender, EventArgs e)
         {
-            ClearFiltersSearchFields();
+            ClearFiltersSearchFields();            
         }
 
         private void dgvWalks_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)

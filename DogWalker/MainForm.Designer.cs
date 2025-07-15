@@ -36,6 +36,7 @@ namespace DogWalker.UI
             this.mnuClients = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDogs = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBreeds = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,7 +45,8 @@ namespace DogWalker.UI
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuProcesses,
-            this.catalogsToolStripMenuItem});
+            this.catalogsToolStripMenuItem,
+            this.mnuExit});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
@@ -63,7 +65,7 @@ namespace DogWalker.UI
             // mnuWalks
             // 
             this.mnuWalks.Name = "mnuWalks";
-            this.mnuWalks.Size = new System.Drawing.Size(180, 22);
+            this.mnuWalks.Size = new System.Drawing.Size(105, 22);
             this.mnuWalks.Text = "Walks";
             this.mnuWalks.Click += new System.EventHandler(this.mnuWalks_Click);
             // 
@@ -98,6 +100,13 @@ namespace DogWalker.UI
             this.mnuBreeds.Text = "Breeds";
             this.mnuBreeds.Click += new System.EventHandler(this.mnuBreeds_Click);
             // 
+            // mnuExit
+            // 
+            this.mnuExit.Name = "mnuExit";
+            this.mnuExit.Size = new System.Drawing.Size(37, 20);
+            this.mnuExit.Text = "Exit";
+            this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -123,6 +132,7 @@ namespace DogWalker.UI
         private System.Windows.Forms.ToolStripMenuItem mnuClients;
         private System.Windows.Forms.ToolStripMenuItem mnuDogs;
         private System.Windows.Forms.ToolStripMenuItem mnuBreeds;
+        private System.Windows.Forms.ToolStripMenuItem mnuExit;
     }
 }
 

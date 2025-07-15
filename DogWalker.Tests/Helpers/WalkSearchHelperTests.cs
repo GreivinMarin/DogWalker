@@ -8,6 +8,12 @@ namespace DogWalker.Tests.Helpers
 {
     public class WalkSearchHelperTests
     {
+        /********************************************************************************************************************************
+
+        This Test validates the functionality of the helper which contains a method to sort the data in the list passed as parameter 
+
+        *********************************************************************************************************************************/
+
         [Fact]
         public void SortList_ShouldSortByDateDescending()
         {

@@ -14,6 +14,13 @@ namespace DogWalker.Infrastructure.Data
             _connection.Open();
         }
 
+        public DatabaseContext(SQLiteConnection connection)
+        {
+            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            if (_connection.State != System.Data.ConnectionState.Open)
+                _connection.Open();
+        }
+
         public SQLiteConnection Connection => _connection;
 
         public void Dispose()
