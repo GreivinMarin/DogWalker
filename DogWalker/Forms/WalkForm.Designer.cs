@@ -43,16 +43,17 @@ namespace DogWalker.UI.Forms
             this.tabWalkOptions = new System.Windows.Forms.TabControl();
             this.tpagAdd = new System.Windows.Forms.TabPage();
             this.tpagSearch = new System.Windows.Forms.TabPage();
-            this.txtClientName = new System.Windows.Forms.TextBox();
-            this.txtDogName = new System.Windows.Forms.TextBox();
-            this.dtpFromDate = new System.Windows.Forms.DateTimePicker();
-            this.dtpToDate = new System.Windows.Forms.DateTimePicker();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.cmdClearFilters = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.dtpToDate = new System.Windows.Forms.DateTimePicker();
+            this.dtpFromDate = new System.Windows.Forms.DateTimePicker();
+            this.txtDogName = new System.Windows.Forms.TextBox();
+            this.txtClientName = new System.Windows.Forms.TextBox();
+            this.chkFilterByDate = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvWalks)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtDuration)).BeginInit();
             this.tabWalkOptions.SuspendLayout();
@@ -90,13 +91,14 @@ namespace DogWalker.UI.Forms
             this.dgvWalks.Size = new System.Drawing.Size(879, 391);
             this.dgvWalks.TabIndex = 2;
             this.dgvWalks.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvWalks_CellClick);
+            this.dgvWalks.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvWalks_ColumnHeaderMouseClick);
             // 
             // dtpDate
             // 
             this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDate.Location = new System.Drawing.Point(390, 13);
             this.dtpDate.Name = "dtpDate";
-            this.dtpDate.Size = new System.Drawing.Size(115, 20);
+            this.dtpDate.Size = new System.Drawing.Size(115, 22);
             this.dtpDate.TabIndex = 2;
             // 
             // txtDuration
@@ -113,7 +115,7 @@ namespace DogWalker.UI.Forms
             0,
             0});
             this.txtDuration.Name = "txtDuration";
-            this.txtDuration.Size = new System.Drawing.Size(115, 20);
+            this.txtDuration.Size = new System.Drawing.Size(115, 22);
             this.txtDuration.TabIndex = 3;
             this.txtDuration.Value = new decimal(new int[] {
             1,
@@ -126,7 +128,7 @@ namespace DogWalker.UI.Forms
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(17, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(33, 13);
+            this.label1.Size = new System.Drawing.Size(41, 16);
             this.label1.TabIndex = 4;
             this.label1.Text = "Client";
             // 
@@ -135,7 +137,7 @@ namespace DogWalker.UI.Forms
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(17, 50);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(27, 13);
+            this.label2.Size = new System.Drawing.Size(34, 16);
             this.label2.TabIndex = 5;
             this.label2.Text = "Dog";
             // 
@@ -144,7 +146,7 @@ namespace DogWalker.UI.Forms
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(334, 15);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(30, 13);
+            this.label3.Size = new System.Drawing.Size(37, 16);
             this.label3.TabIndex = 6;
             this.label3.Text = "Date";
             // 
@@ -153,7 +155,7 @@ namespace DogWalker.UI.Forms
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(334, 50);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(47, 13);
+            this.label4.Size = new System.Drawing.Size(58, 16);
             this.label4.TabIndex = 7;
             this.label4.Text = "Duration";
             // 
@@ -212,6 +214,7 @@ namespace DogWalker.UI.Forms
             // 
             // tpagSearch
             // 
+            this.tpagSearch.Controls.Add(this.chkFilterByDate);
             this.tpagSearch.Controls.Add(this.cmdClearFilters);
             this.tpagSearch.Controls.Add(this.btnSearch);
             this.tpagSearch.Controls.Add(this.label8);
@@ -230,75 +233,9 @@ namespace DogWalker.UI.Forms
             this.tpagSearch.Text = "Search Filters";
             this.tpagSearch.UseVisualStyleBackColor = true;
             // 
-            // txtClientName
-            // 
-            this.txtClientName.Location = new System.Drawing.Point(104, 12);
-            this.txtClientName.Name = "txtClientName";
-            this.txtClientName.Size = new System.Drawing.Size(223, 20);
-            this.txtClientName.TabIndex = 0;
-            // 
-            // txtDogName
-            // 
-            this.txtDogName.Location = new System.Drawing.Point(104, 47);
-            this.txtDogName.Name = "txtDogName";
-            this.txtDogName.Size = new System.Drawing.Size(223, 20);
-            this.txtDogName.TabIndex = 1;
-            // 
-            // dtpFromDate
-            // 
-            this.dtpFromDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFromDate.Location = new System.Drawing.Point(428, 12);
-            this.dtpFromDate.Name = "dtpFromDate";
-            this.dtpFromDate.Size = new System.Drawing.Size(111, 20);
-            this.dtpFromDate.TabIndex = 3;
-            // 
-            // dtpToDate
-            // 
-            this.dtpToDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpToDate.Location = new System.Drawing.Point(428, 47);
-            this.dtpToDate.Name = "dtpToDate";
-            this.dtpToDate.Size = new System.Drawing.Size(111, 20);
-            this.dtpToDate.TabIndex = 4;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(17, 15);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(64, 13);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Client Name";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(17, 50);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(58, 13);
-            this.label6.TabIndex = 6;
-            this.label6.Text = "Dog Name";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(348, 15);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(57, 13);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "Initial Date";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(348, 50);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(55, 13);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "Final Date";
-            // 
             // cmdClearFilters
             // 
-            this.cmdClearFilters.Location = new System.Drawing.Point(647, 14);
+            this.cmdClearFilters.Location = new System.Drawing.Point(705, 10);
             this.cmdClearFilters.Name = "cmdClearFilters";
             this.cmdClearFilters.Size = new System.Drawing.Size(150, 21);
             this.cmdClearFilters.TabIndex = 11;
@@ -308,13 +245,91 @@ namespace DogWalker.UI.Forms
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(647, 47);
+            this.btnSearch.Location = new System.Drawing.Point(705, 47);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(150, 20);
             this.btnSearch.TabIndex = 10;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(482, 49);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(69, 16);
+            this.label8.TabIndex = 8;
+            this.label8.Text = "Final Date";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(482, 12);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(70, 16);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "Initial Date";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(17, 50);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(74, 16);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "Dog Name";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(17, 15);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(81, 16);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Client Name";
+            // 
+            // dtpToDate
+            // 
+            this.dtpToDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpToDate.Location = new System.Drawing.Point(563, 47);
+            this.dtpToDate.Name = "dtpToDate";
+            this.dtpToDate.Size = new System.Drawing.Size(111, 22);
+            this.dtpToDate.TabIndex = 4;
+            // 
+            // dtpFromDate
+            // 
+            this.dtpFromDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpFromDate.Location = new System.Drawing.Point(563, 9);
+            this.dtpFromDate.Name = "dtpFromDate";
+            this.dtpFromDate.Size = new System.Drawing.Size(111, 22);
+            this.dtpFromDate.TabIndex = 3;
+            // 
+            // txtDogName
+            // 
+            this.txtDogName.Location = new System.Drawing.Point(104, 47);
+            this.txtDogName.Name = "txtDogName";
+            this.txtDogName.Size = new System.Drawing.Size(223, 22);
+            this.txtDogName.TabIndex = 1;
+            // 
+            // txtClientName
+            // 
+            this.txtClientName.Location = new System.Drawing.Point(104, 12);
+            this.txtClientName.Name = "txtClientName";
+            this.txtClientName.Size = new System.Drawing.Size(223, 22);
+            this.txtClientName.TabIndex = 0;
+            // 
+            // chkFilterByDate
+            // 
+            this.chkFilterByDate.AutoSize = true;
+            this.chkFilterByDate.Checked = true;
+            this.chkFilterByDate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkFilterByDate.Location = new System.Drawing.Point(358, 12);
+            this.chkFilterByDate.Name = "chkFilterByDate";
+            this.chkFilterByDate.Size = new System.Drawing.Size(106, 20);
+            this.chkFilterByDate.TabIndex = 12;
+            this.chkFilterByDate.Text = "Filter by Date";
+            this.chkFilterByDate.UseVisualStyleBackColor = true;
             // 
             // WalkForm
             // 
@@ -339,7 +354,6 @@ namespace DogWalker.UI.Forms
         private System.Windows.Forms.DataGridView dgvWalks;
         private System.Windows.Forms.ComboBox cmbDog;
         private System.Windows.Forms.ComboBox cmbClient;
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.NumericUpDown txtDuration;
         private System.Windows.Forms.DateTimePicker dtpDate;
         private System.Windows.Forms.Button btnAdd;
@@ -361,5 +375,6 @@ namespace DogWalker.UI.Forms
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button cmdClearFilters;
         private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.CheckBox chkFilterByDate;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DogWalker.Core.Classes;
 using DogWalker.Core.Entities;
+using DogWalker.Core.Helpers;
 using DogWalker.Core.Interfaces;
 using DogWalker.UI.Classes;
 using System;
@@ -16,6 +17,7 @@ namespace DogWalker.UI.Forms
         private readonly IClientRepository _clientRepository;
         private readonly IDogRepository _dogRepository;
         private readonly IWalkRepository _walkRepository;
+        private List<Walk> _walksList;
 
         public WalkForm(IClientRepository clientRepo, IDogRepository dogRepo, IWalkRepository walkRepo)
         {
@@ -27,6 +29,7 @@ namespace DogWalker.UI.Forms
 
         private async void WalkForm_Load(object sender, EventArgs e)
         {
+            tabWalkOptions.SelectedIndex = 1;
             ConfigureGrid();
             await LoadClientsAsync();
             await LoadDogsAsync();
@@ -90,13 +93,19 @@ namespace DogWalker.UI.Forms
             {
                 ClientName = txtClientName.Text.Trim(),
                 DogName = txtDogName.Text.Trim(),
+                FilterByDate = chkFilterByDate.Checked,
                 FromDate = dtpFromDate.Value.Date,
                 ToDate = dtpToDate.Value.Date
             };
 
-            var walks = (await _walkRepository.SearchAsync(criteria)).ToList();
-            dgvWalks.DataSource = walks;
+            _walksList = (await _walkRepository.SearchAsync(criteria)).ToList();
+            dgvWalks.DataSource = _walksList;
+            
+            ConfigureGridColumns();
+        }
 
+        private void ConfigureGridColumns()
+        {
             dgvWalks.Columns["Id"].Visible = false;
             dgvWalks.Columns["IdClient"].Visible = false;
             dgvWalks.Columns["IdDog"].Visible = false;
@@ -111,11 +120,6 @@ namespace DogWalker.UI.Forms
             dgvWalks.Columns["Date"].DisplayIndex = 2;
             dgvWalks.Columns["Duration"].DisplayIndex = 3;
 
-            AddActionButtons();
-        }
-
-        private void AddActionButtons()
-        {
             // prevent duplicated columns
             if (dgvWalks.Columns["btnEdit"] != null)
                 dgvWalks.Columns.Remove("btnEdit");
@@ -166,7 +170,8 @@ namespace DogWalker.UI.Forms
         {
             txtClientName.Text = "";
             txtDogName.Text = "";
-            dtpFromDate.Value = DateTime.Today;
+            chkFilterByDate.Checked = true;
+            dtpFromDate.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
             dtpToDate.Value = DateTime.Today;
         }
 
@@ -292,6 +297,36 @@ namespace DogWalker.UI.Forms
         private void cmdClearFilters_Click(object sender, EventArgs e)
         {
             ClearFiltersSearchFields();
+        }
+
+        private void dgvWalks_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            var clickedColumn = dgvWalks.Columns[e.ColumnIndex];
+
+            // Ignore the sort for actions columns
+            if (clickedColumn is DataGridViewButtonColumn ||
+                clickedColumn.Name == "btnEdit" ||
+                clickedColumn.Name == "btnDelete")
+                return;
+
+            string propertyName = clickedColumn.DataPropertyName;
+
+            // asc/desc sorting
+            bool ascending = clickedColumn.HeaderCell.SortGlyphDirection != SortOrder.Ascending;
+
+            var sortedList = WalkSearchHelper.SortList(_walksList, propertyName, ascending);            
+
+            // Reasign the sorted list as datasource
+            dgvWalks.Columns.Clear();
+            dgvWalks.DataSource = null;
+            dgvWalks.DataSource = sortedList;
+            _walksList = sortedList;
+
+            ConfigureGridColumns(); 
+
+            // indicates the sort direction.
+            clickedColumn = dgvWalks.Columns[propertyName];
+            clickedColumn.HeaderCell.SortGlyphDirection = ascending ? SortOrder.Ascending : SortOrder.Descending;
         }
     }
 }

@@ -34,16 +34,17 @@ namespace DogWalker.Infrastructure.Repositories
         public virtual async Task<IEnumerable<T>> SearchAsync(object searchCriteria)
         {
             var parameters = new DynamicParameters();
-            foreach (PropertyInfo prop in searchCriteria.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                string name = prop.Name;
-                object value = prop.GetValue(searchCriteria);
+            //foreach (PropertyInfo prop in searchCriteria.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            //{
+            //    string name = prop.Name;
+            //    object value = prop.GetValue(searchCriteria);
 
-                // Si el valor es null, no se agrega (opcional)
-                if (value != null)
-                    parameters.Add("@" + name, value);
-            }
-            string sql = SearchAsyncQuery(searchCriteria);
+            //    // Si el valor es null, no se agrega (opcional)
+            //    if (value != null)
+            //        parameters.Add("@" + name, value);
+            //}
+            string sql;
+            (sql, parameters) = SearchAsyncQuery(searchCriteria);
             return await _context.Connection.QueryAsync<T>(sql, parameters);
         }
 
@@ -71,7 +72,7 @@ namespace DogWalker.Infrastructure.Repositories
         // Métodos abstractos para que las clases hijas implementen sus queries SQL
         protected abstract string GetSelectAllQuery();
         protected abstract string GetSelectByIdQuery();
-        protected abstract string SearchAsyncQuery(object searchCriteria);
+        protected abstract (string, Dapper.DynamicParameters) SearchAsyncQuery(object searchCriteria);
         protected abstract string GetInsertQuery();
         protected abstract string GetUpdateQuery();
         protected abstract string GetDeleteQuery();        

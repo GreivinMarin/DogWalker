@@ -65,7 +65,7 @@ namespace DogWalker.Infrastructure.Repositories
             return "DELETE FROM walk WHERE id = @Id";
         }
 
-        protected override string SearchAsyncQuery(object searchCriteria)                                  
+        protected override (string, Dapper.DynamicParameters) SearchAsyncQuery(object searchCriteria)                                  
         {
             var criteria = searchCriteria as WalkSearchCriteria;
             if (criteria == null)
@@ -89,7 +89,7 @@ namespace DogWalker.Infrastructure.Repositories
             if (!string.IsNullOrWhiteSpace(criteria.ClientName))
             {
                 sql += " AND (c.name || ' ' || c.lastname) LIKE @ClientName";
-                parameters.Add("@ClientName", $"%{criteria.ClientName}%");
+                parameters.Add("@ClientName", $"%{criteria.ClientName}%");                
             }
 
             if (!string.IsNullOrWhiteSpace(criteria.DogName))
@@ -98,19 +98,19 @@ namespace DogWalker.Infrastructure.Repositories
                 parameters.Add("@DogName", $"%{criteria.DogName}%");
             }
 
-            if (criteria.FromDate.HasValue)
+            if (criteria.FilterByDate && criteria.FromDate.HasValue)
             {
                 sql += " AND date(w.date) >= date(@FromDate)";
                 parameters.Add("@FromDate", criteria.FromDate.Value.ToString("yyyy-MM-dd"));
             }
 
-            if (criteria.ToDate.HasValue)
+            if (criteria.FilterByDate && criteria.ToDate.HasValue)
             {
                 sql += " AND date(w.date) <= date(@ToDate)";
                 parameters.Add("@ToDate", criteria.ToDate.Value.ToString("yyyy-MM-dd"));
             }
 
-            return sql;
+            return (sql, parameters);
         }
     }
 }

@@ -54,7 +54,7 @@ namespace DogWalker.Infrastructure.Repositories
             return @"DELETE FROM client WHERE id = @Id";
         }
 
-        protected override string SearchAsyncQuery(object searchCriteria)
+        protected override (string, Dapper.DynamicParameters) SearchAsyncQuery(object searchCriteria)
         {
             throw new System.NotImplementedException();
         }
