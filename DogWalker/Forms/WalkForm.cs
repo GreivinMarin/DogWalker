@@ -175,43 +175,10 @@ namespace DogWalker.UI.Forms
             dtpToDate.Value = DateTime.Today;
         }
 
-        private async void btnAdd_Click(object sender, EventArgs e)
-        {
-            if (cmbClient.SelectedItem == null || cmbClient.SelectedValue == null || (int)cmbClient.SelectedValue == 0)
-            {
-                MessageBox.Show("Please select a valid client from the list.");
-                cmbClient.Focus();
-                return;
-            }
-
-            if (cmbDog.SelectedItem == null || cmbDog.SelectedValue == null || (int)cmbDog.SelectedValue == 0)
-            {
-                MessageBox.Show("Please select a valid dog from the list.");
-                cmbDog.Focus();
-                return;
-            }
-
-            // Date Validation
-            DateTime selectedDate = dtpDate.Value.Date;
-            if (selectedDate == DateTime.MinValue)
-            {
-                MessageBox.Show("Please select a valid date.");
-                dtpDate.Focus();
-                return;
-            }
-
-            // Date can't be in the future? need to clarify requirement
-            if (selectedDate > DateTime.Today)
-            {
-                MessageBox.Show("The selected date cannot be in the future.");
-                dtpDate.Focus();
-                return;
-            }
-
-            if (txtDuration.Value <= 0)
-            {
-                MessageBox.Show("Please enter a duration greater than zero.");
-                txtDuration.Focus();
+        private async Task SaveData() {
+            var validation = SaveDataValidations();
+            if (!validation.Item1) {
+                MessageBox.Show(validation.Item2);
                 return;
             }
 
@@ -226,6 +193,100 @@ namespace DogWalker.UI.Forms
             await _walkRepository.AddAsync(walk);
             await LoadWalksAsync();
             ClearAddTabFields();
+            MessageBox.Show("Information saved correctly", "Save");
+        }
+
+        private (bool, string) SaveDataValidations() {
+
+            var errorMessage = "Please validate the below errors: ";
+            var canSave = true;
+            
+            if (cmbClient.SelectedItem == null || cmbClient.SelectedValue == null || (int)cmbClient.SelectedValue == 0)
+            {
+                errorMessage += "\n - Select a valid client from the list.";
+                canSave = false;
+            }
+
+            if (cmbDog.SelectedItem == null || cmbDog.SelectedValue == null || (int)cmbDog.SelectedValue == 0)
+            {                
+                errorMessage += "\n - Please select a valid dog from the list.";
+                canSave = false;
+            }
+
+            // Date Validation
+            DateTime selectedDate = dtpDate.Value.Date;
+            if (selectedDate == DateTime.MinValue)
+            {                
+                errorMessage += "\n - Please select a valid date.";
+                canSave = false;
+            }
+
+            // Date can't be in the future? need to clarify requirement
+            if (selectedDate > DateTime.Today)
+            {
+                errorMessage += "\n - The selected date cannot be in the future.";
+                canSave = false;
+            }
+
+            if (txtDuration.Value <= 0)
+            {
+                errorMessage += "\n - Please enter a duration greater than zero.";
+                canSave = false;
+            }
+
+            return (canSave, errorMessage);
+        }
+
+        private async Task EditData(Walk rowToEdit) {
+            var clients = (await _clientRepository.GetAllAsync()).ToList();
+            var dogs = (await _dogRepository.GetAllAsync()).ToList();
+
+            var data = new Dictionary<string, string>
+            {
+                ["Client"] = rowToEdit.ClientName,
+                ["Dog"] = rowToEdit.DogName,
+                ["Date"] = rowToEdit.Date,
+                ["Duration"] = rowToEdit.Duration.ToString()
+            };
+
+            var combos = new Dictionary<string, List<string>>
+            {
+                ["Client"] = clients.Select(c => c.Name + " " + c.LastName).ToList(),
+                ["Dog"] = dogs.Select(d => d.Name).ToList()
+            };
+
+            var result = Prompt.ShowMultiFieldDialog(data, "Edit Walk", combos);
+            if (result == null) return;
+
+            var selectedClient = clients.FirstOrDefault(c => (c.Name + " " + c.LastName) == result["Client"]);
+            var selectedDog = dogs.FirstOrDefault(d => d.Name == result["Dog"]);
+
+            if (selectedClient == null || selectedDog == null) return;
+
+            rowToEdit.IdClient = selectedClient.Id;
+            rowToEdit.IdDog = selectedDog.Id;
+            rowToEdit.Date = result["Date"];
+            rowToEdit.Duration = double.Parse(result["Duration"]);
+
+            await _walkRepository.UpdateAsync(rowToEdit);
+            await LoadWalksAsync();
+            ClearAddTabFields();
+            MessageBox.Show("Information saved correctly", "Edit");
+        }
+
+        private async Task DeleteData(int WalkId) {
+            var confirm = MessageBox.Show("Are you sure you want to delete this walk?", "Confirm", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.Yes)
+            {
+                await _walkRepository.DeleteAsync(WalkId);
+                await LoadWalksAsync();
+                MessageBox.Show("Information deleted correctly", "Delete");
+            }
+        }
+
+        private async void btnAdd_Click(object sender, EventArgs e)
+        {
+           await SaveData();
         }
 
         private async void DgvWalks_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -239,48 +300,11 @@ namespace DogWalker.UI.Forms
 
             if (column == "btnEdit")
             {
-                var clients = (await _clientRepository.GetAllAsync()).ToList();
-                var dogs = (await _dogRepository.GetAllAsync()).ToList();
-
-                var data = new Dictionary<string, string>
-                {
-                    ["Client"] = row.ClientName,
-                    ["Dog"] = row.DogName,
-                    ["Date"] = row.Date,
-                    ["Duration"] = row.Duration.ToString()
-                };
-
-                var combos = new Dictionary<string, List<string>>
-                {
-                    ["Client"] = clients.Select(c => c.Name + " " + c.LastName).ToList(),
-                    ["Dog"] = dogs.Select(d => d.Name).ToList()
-                };
-
-                var result = Prompt.ShowMultiFieldDialog(data, "Edit Walk", combos);
-                if (result == null) return;
-
-                var selectedClient = clients.FirstOrDefault(c => (c.Name + " " + c.LastName) == result["Client"]);
-                var selectedDog = dogs.FirstOrDefault(d => d.Name == result["Dog"]);
-
-                if (selectedClient == null || selectedDog == null) return;
-
-                row.IdClient = selectedClient.Id;
-                row.IdDog = selectedDog.Id;
-                row.Date = result["Date"];
-                row.Duration = double.Parse(result["Duration"]);
-
-                await _walkRepository.UpdateAsync(row);
-                await LoadWalksAsync();
-                ClearAddTabFields();
+                await EditData(row);
             }
             else if (column == "btnDelete")
             {
-                var confirm = MessageBox.Show("Are you sure you want to delete this walk?", "Confirm", MessageBoxButtons.YesNo);
-                if (confirm == DialogResult.Yes)
-                {
-                    await _walkRepository.DeleteAsync(row.Id);
-                    await LoadWalksAsync();
-                }
+                await DeleteData(row.Id);
             }
         }
 
@@ -327,6 +351,16 @@ namespace DogWalker.UI.Forms
             // indicates the sort direction.
             clickedColumn = dgvWalks.Columns[propertyName];
             clickedColumn.HeaderCell.SortGlyphDirection = ascending ? SortOrder.Ascending : SortOrder.Descending;
+        }
+
+        private async void SearchFields_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                await LoadWalksAsync(); 
+            }
         }
     }
 }

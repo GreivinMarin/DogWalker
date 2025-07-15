@@ -96,14 +96,14 @@ namespace DogWalker.UI.Forms
             // dtpDate
             // 
             this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDate.Location = new System.Drawing.Point(390, 13);
+            this.dtpDate.Location = new System.Drawing.Point(437, 12);
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(115, 22);
             this.dtpDate.TabIndex = 2;
             // 
             // txtDuration
             // 
-            this.txtDuration.Location = new System.Drawing.Point(390, 47);
+            this.txtDuration.Location = new System.Drawing.Point(437, 46);
             this.txtDuration.Maximum = new decimal(new int[] {
             1440,
             0,
@@ -155,13 +155,13 @@ namespace DogWalker.UI.Forms
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(334, 50);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 16);
+            this.label4.Size = new System.Drawing.Size(90, 16);
             this.label4.TabIndex = 7;
-            this.label4.Text = "Duration";
+            this.label4.Text = "Duration (min)";
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(540, 47);
+            this.btnAdd.Location = new System.Drawing.Point(642, 47);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(150, 20);
             this.btnAdd.TabIndex = 8;
@@ -171,7 +171,7 @@ namespace DogWalker.UI.Forms
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(540, 12);
+            this.btnClear.Location = new System.Drawing.Point(642, 12);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(150, 21);
             this.btnClear.TabIndex = 9;
@@ -311,6 +311,7 @@ namespace DogWalker.UI.Forms
             this.txtDogName.Name = "txtDogName";
             this.txtDogName.Size = new System.Drawing.Size(223, 22);
             this.txtDogName.TabIndex = 1;
+            this.txtDogName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchFields_KeyDown);
             // 
             // txtClientName
             // 
@@ -318,6 +319,7 @@ namespace DogWalker.UI.Forms
             this.txtClientName.Name = "txtClientName";
             this.txtClientName.Size = new System.Drawing.Size(223, 22);
             this.txtClientName.TabIndex = 0;
+            this.txtClientName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchFields_KeyDown);
             // 
             // chkFilterByDate
             // 
