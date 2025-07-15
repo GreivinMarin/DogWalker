@@ -29,5 +29,6 @@ Some important technical details
    - Unit Testing: Used xUnit to add tests for a helper and a Repository, the advantage of the Repository Pattern be able to decouple them from the actual DB and be able to test them.
    - Trying to keep methods small, less code as possible in the events methods.
    - Use of async methods when there is a load of data to prevent UI freezes (since I used Framework 4.8 I was able to used Async for 3.5 and older versions we can use backgroundWorker)
-   - 
+   - Use of anchor and docking to keep the forms Responsive.
+   - The Catalog forms are child forms, inside the Main form, but the Walk Form is independant so the user can move it to other screen or so to work more confortable.
  
